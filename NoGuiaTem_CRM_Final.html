@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<!-- saved from url=(0066)file:///C:/Users/Andre%20Nery/Downloads/NoGuiaTem_CRM_Final_3.html -->
+<html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#3B6D11">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>NoGuiaTem CRM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link href="./NoGuiaTem_CRM_Final_files/css2" rel="stylesheet">
+<style>
+:root {
+  --g-dark: #173404; --g-main: #3B6D11; --g-mid: #639922;
+  --g-light: #EAF3DE; --g-pale: #F1EFE8;
+  --amber: #FAC775; --amber-d: #BA7517;
+  --ink: #2C2C2A; --gray: #888780; --white: #fff;
+  --red: #C62828; --red-bg: #FADADD;
+  --yellow-bg: #FFF9C4; --blue-bg: #E3F2FD;
+  --radius: 12px; --radius-sm: 8px;
+  --shadow: 0 2px 12px rgba(44,44,42,.10);
+  --shadow-lg: 0 8px 32px rgba(44,44,42,.18);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; background: var(--g-pale); font-family: 'DM Sans', sans-serif; color: var(--ink); }
+
+/* ── LAYOUT ── */
+#app { display: flex; flex-direction: column; height: 100dvh; max-width: 480px; margin: 0 auto; background: var(--white); position: relative; overflow: hidden; box-shadow: var(--shadow-lg); }
+#header { background: var(--g-dark); padding: 14px 18px 12px; flex-shrink: 0; position: relative; z-index: 10; }
+#header-top { display: flex; align-items: center; justify-content: space-between; }
+.logo-txt { font-family: 'Figtree', sans-serif; font-size: 20px; font-weight: 900; color: var(--white); letter-spacing: -.03em; }
+.logo-txt span { color: var(--g-mid); }
+.header-sub { font-size: 11px; color: rgba(255,255,255,.55); margin-top: 2px; letter-spacing: .03em; }
+#header-stats { display: flex; gap: 16px; margin-top: 12px; }
+.hstat { text-align: center; }
+.hstat-n { font-family: 'Figtree', sans-serif; font-size: 22px; font-weight: 900; color: var(--white); line-height: 1; }
+.hstat-l { font-size: 10px; color: rgba(255,255,255,.5); margin-top: 1px; }
+#content { flex: 1; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+#nav { display: flex; background: var(--g-dark); border-top: 1px solid rgba(255,255,255,.08); flex-shrink: 0; }
+.nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 4px; border: none; background: none; color: rgba(255,255,255,.45); font-family: 'DM Sans', sans-serif; font-size: 10px; cursor: pointer; transition: color .15s; }
+.nav-btn.active { color: var(--g-mid); }
+.nav-btn svg { width: 20px; height: 20px; }
+
+/* ── VIEWS ── */
+.view { display: none; padding: 0 0 24px; }
+.view.active { display: block; }
+
+/* ── CARDS ── */
+.section-label { font-size: 11px; font-weight: 500; color: var(--gray); text-transform: uppercase; letter-spacing: .07em; padding: 18px 18px 8px; }
+.card { background: var(--white); border: 1px solid #eee; border-radius: var(--radius); margin: 0 14px 10px; padding: 14px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+.card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.card-title { font-family: 'Figtree', sans-serif; font-size: 16px; font-weight: 700; color: var(--ink); }
+.card-sub { font-size: 12px; color: var(--gray); margin-top: 2px; }
+.card-actions { display: flex; gap: 6px; margin-top: 12px; }
+.btn { border: none; border-radius: 20px; padding: 7px 14px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; cursor: pointer; transition: opacity .15s; }
+.btn:active { opacity: .7; }
+.btn-primary { background: var(--g-main); color: var(--white); }
+.btn-secondary { background: var(--g-light); color: var(--g-dark); }
+.btn-danger { background: var(--red-bg); color: var(--red); }
+.btn-amber { background: #FFF3CD; color: var(--amber-d); }
+.btn-full { width: 100%; border-radius: var(--radius-sm); padding: 13px; font-size: 14px; font-weight: 500; }
+.btn-fab { position: fixed; bottom: 80px; right: 20px; width: 56px; height: 56px; border-radius: 50%; background: var(--g-main); color: var(--white); border: none; font-size: 26px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(59,109,17,.45); cursor: pointer; z-index: 50; transition: transform .15s; }
+.btn-fab:active { transform: scale(.93); }
+
+/* ── BADGES ── */
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+.badge-green { background: var(--g-light); color: var(--g-dark); }
+.badge-amber { background: #FFF3CD; color: var(--amber-d); }
+.badge-red { background: var(--red-bg); color: var(--red); }
+.badge-blue { background: var(--blue-bg); color: #1565C0; }
+.badge-gray { background: #f0f0f0; color: var(--gray); }
+
+/* ── SCORE BAR ── */
+.score-wrap { margin-top: 10px; }
+.score-bar-bg { height: 6px; background: #eee; border-radius: 3px; overflow: hidden; }
+.score-bar-fill { height: 100%; border-radius: 3px; transition: width .4s; }
+.score-nums { display: flex; justify-content: space-between; font-size: 11px; color: var(--gray); margin-top: 4px; }
+
+/* ── PIPELINE ── */
+.pipeline { display: flex; overflow-x: auto; gap: 10px; padding: 8px 14px 4px; scrollbar-width: none; -ms-overflow-style: none; }
+.pipeline::-webkit-scrollbar { display: none; }
+.pipe-col { flex-shrink: 0; width: 140px; }
+.pipe-head { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; padding: 6px 10px; border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
+.pipe-body { min-height: 80px; background: #f8f8f6; border-radius: 0 0 var(--radius-sm) var(--radius-sm); padding: 6px; }
+.pipe-item { background: var(--white); border-radius: 6px; padding: 8px; margin-bottom: 6px; font-size: 12px; border-left: 3px solid; box-shadow: 0 1px 3px rgba(0,0,0,.07); }
+.pipe-count { font-size: 16px; font-weight: 700; padding: 4px 10px 8px; background: #f8f8f6; }
+
+/* ── FORMULÁRIO ── */
+.form-wrap { padding: 0 14px 30px; }
+.field-group { margin-bottom: 16px; }
+.field-label { font-size: 12px; font-weight: 500; color: var(--gray); margin-bottom: 5px; display: block; }
+.field-label .req { color: var(--red); margin-left: 2px; }
+.field-input { width: 100%; border: 1.5px solid #ddd; border-radius: var(--radius-sm); padding: 11px 13px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink); background: var(--white); appearance: none; transition: border-color .15s; }
+.field-input:focus { outline: none; border-color: var(--g-main); }
+.field-select { width: 100%; border: 1.5px solid #ddd; border-radius: var(--radius-sm); padding: 11px 13px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink); background: var(--white); appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 13px center; padding-right: 36px; }
+.field-select:focus { outline: none; border-color: var(--g-main); }
+.field-textarea { width: 100%; border: 1.5px solid #ddd; border-radius: var(--radius-sm); padding: 11px 13px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink); min-height: 80px; resize: vertical; }
+.field-textarea:focus { outline: none; border-color: var(--g-main); }
+.radio-group { display: flex; flex-wrap: wrap; gap: 7px; }
+.radio-opt { display: flex; align-items: center; gap: 6px; background: #f5f5f3; border: 1.5px solid transparent; border-radius: 20px; padding: 7px 13px; font-size: 13px; cursor: pointer; transition: all .15s; }
+.radio-opt.selected { background: var(--g-light); border-color: var(--g-main); color: var(--g-dark); font-weight: 500; }
+.form-section-title { font-family: 'Figtree', sans-serif; font-size: 15px; font-weight: 700; color: var(--ink); padding: 18px 0 10px; border-bottom: 2px solid var(--g-light); margin-bottom: 16px; }
+.score-preview { background: var(--g-light); border-radius: var(--radius); padding: 14px; margin: 16px 0; }
+.score-preview-num { font-family: 'Figtree', sans-serif; font-size: 36px; font-weight: 900; color: var(--g-main); }
+.score-preview-label { font-size: 13px; color: var(--g-dark); margin-top: 2px; }
+
+/* ── MODAL ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 100; display: flex; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity .2s; }
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal-box { background: var(--white); border-radius: var(--radius) var(--radius) 0 0; width: 100%; max-height: 90dvh; overflow-y: auto; padding: 20px 18px 32px; transform: translateY(20px); transition: transform .2s; }
+.modal-overlay.open .modal-box { transform: translateY(0); }
+.modal-handle { width: 36px; height: 4px; background: #ddd; border-radius: 2px; margin: 0 auto 18px; }
+.modal-title { font-family: 'Figtree', sans-serif; font-size: 18px; font-weight: 700; color: var(--ink); margin-bottom: 16px; }
+
+/* ── LISTA DE NEGÓCIOS ── */
+.biz-list { padding: 0 14px; }
+.biz-item { display: flex; align-items: flex-start; gap: 12px; padding: 13px 0; border-bottom: 1px solid #f0f0ee; }
+.biz-item:last-child { border-bottom: none; }
+.biz-avatar { width: 42px; height: 42px; border-radius: 10px; background: var(--g-light); display: flex; align-items: center; justify-content: center; font-family: 'Figtree', sans-serif; font-size: 18px; font-weight: 900; color: var(--g-main); flex-shrink: 0; }
+.biz-info { flex: 1; min-width: 0; }
+.biz-name { font-weight: 500; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.biz-meta { font-size: 12px; color: var(--gray); margin-top: 2px; }
+.biz-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0; }
+.score-dot { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+
+/* ── SEARCH ── */
+.search-wrap { padding: 12px 14px 4px; position: sticky; top: 0; background: var(--white); z-index: 5; }
+.search-input { width: 100%; border: 1.5px solid #eee; border-radius: 20px; padding: 10px 16px; font-family: 'DM Sans', sans-serif; font-size: 14px; background: #f8f8f6; }
+.search-input:focus { outline: none; border-color: var(--g-main); background: var(--white); }
+
+/* ── DASHBOARD ── */
+.dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 8px 14px; }
+.dash-card { background: var(--white); border: 1px solid #eee; border-radius: var(--radius); padding: 14px; box-shadow: 0 1px 4px rgba(0,0,0,.05); }
+.dash-num { font-family: 'Figtree', sans-serif; font-size: 28px; font-weight: 900; color: var(--g-main); line-height: 1; }
+.dash-lbl { font-size: 12px; color: var(--gray); margin-top: 4px; }
+.dash-big { grid-column: 1 / -1; }
+.mrr-num { font-size: 36px; color: var(--g-dark); }
+
+/* ── EMPTY STATE ── */
+.empty { text-align: center; padding: 60px 32px; color: var(--gray); }
+.empty-icon { font-size: 48px; margin-bottom: 12px; }
+.empty-title { font-family: 'Figtree', sans-serif; font-size: 18px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+.empty-sub { font-size: 14px; line-height: 1.6; }
+
+/* ── TOAST ── */
+#toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--g-dark); color: var(--white); padding: 10px 20px; border-radius: 20px; font-size: 13px; font-weight: 500; opacity: 0; transition: all .3s; z-index: 200; pointer-events: none; white-space: nowrap; }
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── DETAIL ── */
+.detail-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 9px 0; border-bottom: 1px solid #f5f5f3; font-size: 13px; }
+.detail-row:last-child { border-bottom: none; }
+.detail-key { color: var(--gray); flex-shrink: 0; margin-right: 12px; }
+.detail-val { text-align: right; font-weight: 400; color: var(--ink); }
+.wa-link { color: var(--g-main); text-decoration: none; font-weight: 500; }
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- HEADER -->
+  <div id="header">
+    <div id="header-top">
+      <div>
+        <div class="logo-txt">No<span>Guia</span>Tem</div>
+        <div class="header-sub">CRM · Cabula · Salvador</div>
+      </div>
+        <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn btn-secondary" style="font-size:11px;padding:6px 12px" onclick="syncAllToSheets()">☁️ Sync</button>
+        <button class="btn btn-secondary" style="font-size:11px;padding:6px 12px" onclick="exportCSV()">⬇ CSV</button>
+      </div>
+    </div>
+    <div id="header-stats">
+      <div class="hstat"><div class="hstat-n" id="stat-total">3</div><div class="hstat-l">Mapeados</div></div>
+      <div class="hstat"><div class="hstat-n" id="stat-clientes">2</div><div class="hstat-l">Clientes</div></div>
+      <div class="hstat"><div class="hstat-n" id="stat-mrr">R$158</div><div class="hstat-l">MRR</div></div>
+      <div class="hstat"><div class="hstat-n" id="stat-score">3.7</div><div class="hstat-l">Score médio</div></div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div id="content">
+
+    <!-- VIEW: NEGÓCIOS -->
+    <div id="view-negocios" class="view active">
+      <div class="search-wrap">
+        <input class="search-input" placeholder="🔍 Buscar negócio, categoria..." id="search-input" oninput="renderNegocios()">
+      </div>
+      <div style="display:flex;gap:6px;padding:8px 14px 0;overflow-x:auto;scrollbar-width:none">
+        <button class="btn badge-green" style="white-space:nowrap;font-size:11px" onclick="filterCat(&#39;&#39;)" id="filter-all">Todos</button>
+        <button class="btn badge-gray" style="white-space:nowrap;font-size:11px" onclick="filterCat(&#39;Alimentação&#39;)">Alimentação</button>
+        <button class="btn badge-gray" style="white-space:nowrap;font-size:11px" onclick="filterCat(&#39;Saúde&#39;)">Saúde</button>
+        <button class="btn badge-gray" style="white-space:nowrap;font-size:11px" onclick="filterCat(&#39;Beleza&#39;)">Beleza</button>
+        <button class="btn badge-gray" style="white-space:nowrap;font-size:11px" onclick="filterCat(&#39;Construção&#39;)">Construção</button>
+        <button class="btn badge-gray" style="white-space:nowrap;font-size:11px" onclick="filterCat(&#39;Serviços Domésticos&#39;)">Serviços</button>
+      </div>
+      <div id="biz-list-wrap"><div class="biz-list"><div class="biz-item" onclick="openDetail(&#39;NGT-003&#39;)">
+      <div class="biz-avatar">T</div>
+      <div class="biz-info">
+        <div class="biz-name">teste</div>
+        <div class="biz-meta">Outro · -</div>
+        <div style="margin-top:5px;display:flex;gap:5px;flex-wrap:wrap">
+          <span class="badge badge-blue" style="font-size:10px">🔵 Novo lead</span>
+          <span class="badge badge-amber" style="font-size:10px">→ Criar GMN</span>
+        </div>
+      </div>
+      <div class="biz-right">
+        <div class="score-dot" style="background:#ef535022;color:#ef5350">0</div>
+        <div style="font-size:10px;color:#C62828">🔴</div>
+      </div>
+    </div><div class="biz-item" onclick="openDetail(&#39;NGT-002&#39;)">
+      <div class="biz-avatar">CB</div>
+      <div class="biz-info">
+        <div class="biz-name">Cabelinho Barbearia</div>
+        <div class="biz-meta">Beleza e Estética · -</div>
+        <div style="margin-top:5px;display:flex;gap:5px;flex-wrap:wrap">
+          <span class="badge badge-green" style="font-size:10px">⭐ Cliente ativo</span>
+          <span class="badge badge-amber" style="font-size:10px">→ Oferecer tráfego pago</span>
+        </div>
+      </div>
+      <div class="biz-right">
+        <div class="score-dot" style="background:#FFA00022;color:#FFA000">4</div>
+        <div style="font-size:10px;color:#BA7517">🟡</div>
+      </div>
+    </div><div class="biz-item" onclick="openDetail(&#39;NGT-001&#39;)">
+      <div class="biz-avatar">EC</div>
+      <div class="biz-info">
+        <div class="biz-name">Eu Crio - comunicação</div>
+        <div class="biz-meta">Outro · Rua Amazonas - 99 -  Cabula</div>
+        <div style="margin-top:5px;display:flex;gap:5px;flex-wrap:wrap">
+          <span class="badge badge-green" style="font-size:10px">⭐ Cliente ativo</span>
+          <span class="badge badge-amber" style="font-size:10px">→ Propor upgrade</span>
+        </div>
+      </div>
+      <div class="biz-right">
+        <div class="score-dot" style="background:#43A04722;color:#43A047">7</div>
+        <div style="font-size:10px;color:#3B6D11">🟢</div>
+      </div>
+    </div></div></div>
+    </div>
+
+    <!-- VIEW: CADASTRAR -->
+    <div id="view-cadastrar" class="view">
+      <div class="form-wrap">
+        <div class="form-section-title">📍 Identificação</div>
+
+        <div class="field-group">
+          <label class="field-label">Nome do negócio <span class="req">*</span></label>
+          <input class="field-input" id="f-nome" placeholder="Ex: Padaria São Jorge" required="">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Responsável</label>
+          <input class="field-input" id="f-resp" placeholder="Nome do dono ou gerente">
+        </div>
+        <div class="field-group">
+          <label class="field-label">WhatsApp <span class="req">*</span></label>
+          <input class="field-input" id="f-wpp" placeholder="71 9 9999-0000" type="tel">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Instagram (@)</label>
+          <input class="field-input" id="f-insta" placeholder="@nomedobairro">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Endereço <span class="req">*</span></label>
+          <input class="field-input" id="f-end" placeholder="Rua, número, referência">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Categoria <span class="req">*</span></label>
+          <select class="field-select" id="f-cat">
+            <option value="">Selecione...</option>
+            <option>Alimentação</option><option>Saúde e Farmácia</option>
+            <option>Beleza e Estética</option><option>Construção e Reforma</option>
+            <option>Educação e Cursos</option><option>Moda e Acessórios</option>
+            <option>Pet e Veterinário</option><option>Transporte e Motoboy</option>
+            <option>Tecnologia e Informática</option><option>Serviços Domésticos</option>
+            <option>Financeiro e Crédito</option><option>Lazer e Entretenimento</option>
+            <option>Outro</option>
+          </select>
+        </div>
+
+        <div class="form-section-title">🔍 Diagnóstico Digital</div>
+
+        <div class="field-group">
+          <label class="field-label">Google Meu Negócio</label>
+          <div class="radio-group" id="f-gmn">
+            <div class="radio-opt" onclick="selectRadio(&#39;f-gmn&#39;,this,&#39;Sim ativo&#39;)">✅ Sim ativo</div>
+            <div class="radio-opt" onclick="selectRadio(&#39;f-gmn&#39;,this,&#39;Sim desatualizado&#39;)">⚠️ Desatualizado</div>
+            <div class="radio-opt" onclick="selectRadio(&#39;f-gmn&#39;,this,&#39;Não tem&#39;)">❌ Não tem</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Instagram ativo?</label>
+          <div class="radio-group" id="f-ig">
+            <div class="radio-opt" onclick="selectRadio(&#39;f-ig&#39;,this,&#39;Sim ativo&#39;)">✅ Ativo</div>
+            <div class="radio-opt" onclick="selectRadio(&#39;f-ig&#39;,this,&#39;Sim parado&#39;)">⏸ Parado</div>
+            <div class="radio-opt" onclick="selectRadio(&#39;f-ig&#39;,this,&#39;Não tem&#39;)">❌ Não tem</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Identidade visual</label>
+          <div class="radio-group" id="f-iv">
+            <div class="radio-opt" onclick="selectRadio(&#39;f-iv&#39;,this,&#39;Profissional&#39;)">🎨 Profissional</div>
+            <div class="radio-opt" onclick="selectRadio(&#39;f-iv&#39;,this,&#39;Improvisado&#39;)">🖼 Improvisada</div>
+            <div class="radio-opt" onclick="selectRadio(&#39;f-iv&#39;,this,&#39;Nenhuma&#39;)">❌ Nenhuma</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Tráfego pago (anúncios)</label>
+          <div class="radio-group" id="f-trafego">
+            <div class="radio-opt" onclick="selectRadio(&#39;f-trafego&#39;,this,&#39;Sim&#39;)">✅ Faz</div>
+            <div class="radio-opt" onclick="selectRadio(&#39;f-trafego&#39;,this,&#39;Já fez&#39;)">🔄 Já fez</div>
+            <div class="radio-opt" onclick="selectRadio(&#39;f-trafego&#39;,this,&#39;Não&#39;)">❌ Nunca</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">WhatsApp Business</label>
+          <div class="radio-group" id="f-wab">
+            <div class="radio-opt" onclick="selectRadio(&#39;f-wab&#39;,this,&#39;Sim&#39;)">✅ Tem</div>
+            <div class="radio-opt" onclick="selectRadio(&#39;f-wab&#39;,this,&#39;Não&#39;)">❌ Não tem</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Possui site?</label>
+          <div class="radio-group" id="f-site">
+            <div class="radio-opt" onclick="selectRadio(&#39;f-site&#39;,this,&#39;Sim&#39;)">✅ Sim</div>
+            <div class="radio-opt" onclick="selectRadio(&#39;f-site&#39;,this,&#39;Não&#39;)">❌ Não</div>
+          </div>
+        </div>
+
+        <!-- SCORE AO VIVO -->
+        <div class="score-preview" id="score-preview">
+          <div class="score-preview-label">Score digital estimado</div>
+          <div class="score-preview-num" id="score-live">0</div>
+          <div id="nivel-live" style="font-size: 13px; color: rgb(198, 40, 40); font-weight: 500; margin-top: 2px;">🔴 Básico</div>
+          <div class="score-wrap"><div class="score-bar-bg"><div class="score-bar-fill" id="score-bar" style="width: 0%; background: rgb(239, 83, 80);"></div></div><div class="score-nums"><span>0</span><span>6</span><span>12</span></div></div>
+        </div>
+
+        <div class="form-section-title">💡 Interesse Comercial</div>
+
+        <div class="field-group">
+          <label class="field-label">Interesse em entrar no guia</label>
+          <div class="radio-group" id="f-int-guia">
+            <div class="radio-opt" onclick="selectRadio(&#39;f-int-guia&#39;,this,&#39;Sim já&#39;)">🟢 Sim já</div>
+            <div class="radio-opt" onclick="selectRadio(&#39;f-int-guia&#39;,this,&#39;Talvez&#39;)">🟡 Talvez</div>
+            <div class="radio-opt" onclick="selectRadio(&#39;f-int-guia&#39;,this,&#39;Não agora&#39;)">🔴 Não agora</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Potencial de parceria</label>
+          <div class="radio-group" id="f-potencial">
+            <div class="radio-opt" onclick="selectRadio(&#39;f-potencial&#39;,this,&#39;Alto&#39;)">🔥 Alto</div>
+            <div class="radio-opt" onclick="selectRadio(&#39;f-potencial&#39;,this,&#39;Médio&#39;)">⚡ Médio</div>
+            <div class="radio-opt" onclick="selectRadio(&#39;f-potencial&#39;,this,&#39;Baixo&#39;)">🌱 Baixo</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Status inicial</label>
+          <select class="field-select" id="f-status">
+            <option value="🔵 Novo lead">🔵 Novo lead</option>
+            <option value="🟡 Em conversa">🟡 Em conversa</option>
+            <option value="🟠 Proposta enviada">🟠 Proposta enviada</option>
+            <option value="🟢 Cadastrado free">🟢 Cadastrado free</option>
+            <option value="⭐ Cliente ativo">⭐ Cliente ativo</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Observações da visita</label>
+          <textarea class="field-textarea" id="f-obs" placeholder="O que foi conversado, impressões, próximos passos..."></textarea>
+        </div>
+
+        <button class="btn btn-primary btn-full" onclick="salvarNegocio()" style="margin-top:8px">✅ Salvar Cadastro</button>
+      </div>
+    </div>
+
+    <!-- VIEW: PIPELINE -->
+    <div id="view-pipeline" class="view">
+      <div class="section-label">Pipeline Comercial</div>
+      <div class="pipeline" id="pipeline-board"></div>
+      <div class="section-label" style="margin-top:8px">Follow-up pendente</div>
+      <div id="followup-list" style="padding:0 14px"></div>
+    </div>
+
+    <!-- VIEW: DASHBOARD -->
+    <div id="view-dashboard" class="view">
+      <div class="section-label">Visão Geral</div>
+      <div class="dash-grid" id="dash-grid"></div>
+      <div class="section-label">Por categoria</div>
+      <div id="cat-breakdown" style="padding:0 14px 16px"></div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- NAV -->
+  <div id="nav">
+    <button class="nav-btn active" id="nav-negocios" onclick="showView(&#39;negocios&#39;)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      Negócios
+    </button>
+    <button class="nav-btn" id="nav-cadastrar" onclick="showView(&#39;cadastrar&#39;)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+      Cadastrar
+    </button>
+    <button class="nav-btn" id="nav-pipeline" onclick="showView(&#39;pipeline&#39;)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="6" height="18" rx="1"></rect><rect x="9" y="7" width="6" height="14" rx="1"></rect><rect x="16" y="11" width="6" height="10" rx="1"></rect></svg>
+      Pipeline
+    </button>
+    <button class="nav-btn" id="nav-dashboard" onclick="showView(&#39;dashboard&#39;)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+      Dashboard
+    </button>
+  </div>
+
+  <div id="toast"></div>
+</div>
+
+<!-- MODAL DETALHE -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal-box">
+    <div class="modal-handle"></div>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+// ── DADOS ──────────────────────────────────────────────────────
+const STORE_KEY = 'ngt_crm_v2';
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxEm9kQnhuf-3LFB0uFyYWysH1ee7YJtFztCQI996XVsqdKLguJyoIMs7J2xImrTO6B/exec'; // ← Cole aqui sua URL do Apps Script (passo 1)
+
+let data = [];
+let activeFilter = '';
+let editingId = null;
+
+function load() {
+  try { data = JSON.parse(localStorage.getItem(STORE_KEY)) || []; } catch(e) { data = []; }
+}
+function save() {
+  localStorage.setItem(STORE_KEY, JSON.stringify(data));
+  updateStats();
+}
+
+// ── SYNC GOOGLE SHEETS ─────────────────────────────────────────
+async function syncToSheets(negocio) {
+  if (!SHEETS_URL) return; // sem URL configurada, pula silenciosamente
+  try {
+    showToast('☁️ Sincronizando com Sheets...');
+    const sc = calcScore(negocio);
+    const payload = { ...negocio, score: sc, nivel: scoreLabel(sc).txt };
+    await fetch(SHEETS_URL, {
+      method: 'POST',
+      mode: 'no-cors', // necessário para Apps Script
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    showToast('✅ Salvo no Sheets!');
+  } catch (err) {
+    showToast('⚠️ Salvo local. Sheets offline.');
+    console.warn('Sheets sync error:', err);
+  }
+}
+
+async function syncAllToSheets() {
+  if (!SHEETS_URL) { showToast('⚠️ Configure a URL do Sheets primeiro'); return; }
+  if (!data.length) { showToast('Nenhum dado para sincronizar'); return; }
+  showToast('☁️ Enviando ' + data.length + ' registros...');
+  for (const n of data) {
+    await syncToSheets(n);
+    await new Promise(r => setTimeout(r, 300)); // evita throttle
+  }
+  showToast('✅ Tudo sincronizado com Sheets!');
+}
+function nextId() {
+  const max = data.reduce((m, d) => Math.max(m, parseInt(d.id?.replace('NGT-','')) || 0), 0);
+  return 'NGT-' + String(max + 1).padStart(3, '0');
+}
+
+// ── SCORE ──────────────────────────────────────────────────────
+function calcScore(n) {
+  let s = 0;
+  if (n.gmn === 'Sim ativo') s += 2; else if (n.gmn === 'Sim desatualizado') s += 1;
+  if (n.ig  === 'Sim ativo') s += 2; else if (n.ig === 'Sim parado') s += 1;
+  if (n.iv  === 'Profissional') s += 2; else if (n.iv === 'Improvisado') s += 1;
+  if (n.trafego === 'Sim') s += 2;
+  if (n.wab === 'Sim') s += 1;
+  if (n.site === 'Sim') s += 1;
+  return s;
+}
+function scoreLabel(s) {
+  if (s <= 2) return { txt: '🔴 Básico', color: '#C62828' };
+  if (s <= 5) return { txt: '🟡 Médio', color: '#BA7517' };
+  if (s <= 8) return { txt: '🟢 Avançado', color: '#3B6D11' };
+  return { txt: '⭐ Premium', color: '#1B5E20' };
+}
+function scoreBarColor(s) {
+  if (s <= 2) return '#ef5350'; if (s <= 5) return '#FFA000'; if (s <= 8) return '#43A047'; return '#1B5E20';
+}
+function oportunidade(n) {
+  if (n.gmn === 'Não tem') return 'Criar GMN';
+  if (n.ig  === 'Não tem') return 'Ativar Instagram';
+  if (n.wab === 'Não') return 'Configurar WA Business';
+  if (n.iv  === 'Nenhuma') return 'Criar identidade visual';
+  if (n.trafego === 'Não') return 'Oferecer tráfego pago';
+  return 'Propor upgrade';
+}
+
+// ── NAVEGAÇÃO ──────────────────────────────────────────────────
+function showView(v) {
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('view-' + v).classList.add('active');
+  document.getElementById('nav-' + v).classList.add('active');
+  if (v === 'negocios') renderNegocios();
+  if (v === 'pipeline') renderPipeline();
+  if (v === 'dashboard') renderDashboard();
+}
+
+function filterCat(cat) {
+  activeFilter = cat;
+  document.querySelectorAll('[onclick^="filterCat"]').forEach(b => {
+    b.className = 'btn ' + (b.textContent.trim() === (cat || 'Todos') ? 'badge-green' : 'badge-gray');
+    b.style.cssText = 'white-space:nowrap;font-size:11px';
+  });
+  renderNegocios();
+}
+
+// ── RENDER NEGÓCIOS ────────────────────────────────────────────
+function renderNegocios() {
+  const q = document.getElementById('search-input').value.toLowerCase();
+  let list = data.filter(n => {
+    const matchQ = !q || n.nome?.toLowerCase().includes(q) || n.cat?.toLowerCase().includes(q) || n.resp?.toLowerCase().includes(q);
+    const matchF = !activeFilter || n.cat?.startsWith(activeFilter);
+    return matchQ && matchF;
+  });
+
+  const wrap = document.getElementById('biz-list-wrap');
+  if (!list.length) {
+    wrap.innerHTML = `<div class="empty"><div class="empty-icon">🗺</div><div class="empty-title">Nenhum negócio ainda</div><div class="empty-sub">Toque em <strong>Cadastrar</strong> para adicionar o primeiro negócio do Cabula.</div></div>`;
+    return;
+  }
+
+  wrap.innerHTML = '<div class="biz-list">' + list.map(n => {
+    const sc = calcScore(n);
+    const lv = scoreLabel(sc);
+    const initials = (n.nome || '?').split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
+    const statusBadge = statusColor(n.status);
+    return `<div class="biz-item" onclick="openDetail('${n.id}')">
+      <div class="biz-avatar">${initials}</div>
+      <div class="biz-info">
+        <div class="biz-name">${n.nome}</div>
+        <div class="biz-meta">${n.cat || '—'} · ${n.end?.split(',')[0] || '—'}</div>
+        <div style="margin-top:5px;display:flex;gap:5px;flex-wrap:wrap">
+          <span class="badge ${statusBadge.cls}" style="font-size:10px">${n.status || '🔵 Novo lead'}</span>
+          ${n.oport ? `<span class="badge badge-amber" style="font-size:10px">→ ${n.oport}</span>` : ''}
+        </div>
+      </div>
+      <div class="biz-right">
+        <div class="score-dot" style="background:${scoreBarColor(sc)}22;color:${scoreBarColor(sc)}">${sc}</div>
+        <div style="font-size:10px;color:${lv.color}">${lv.txt.split(' ')[0]}</div>
+      </div>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+function statusColor(s) {
+  const m = {
+    '🔵 Novo lead': 'badge-blue',
+    '🟡 Em conversa': 'badge-amber',
+    '🟠 Proposta enviada': 'badge-amber',
+    '🟢 Cadastrado free': 'badge-green',
+    '⭐ Cliente ativo': 'badge-green',
+    '🔴 Descartado': 'badge-red',
+  };
+  return { cls: m[s] || 'badge-gray' };
+}
+
+// ── FORMULÁRIO ────────────────────────────────────────────────
+function selectRadio(groupId, el, val) {
+  document.querySelectorAll(`#${groupId} .radio-opt`).forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  el.dataset.value = val;
+  updateScoreLive();
+}
+function getRadio(groupId) {
+  return document.querySelector(`#${groupId} .selected`)?.dataset.value || '';
+}
+
+function updateScoreLive() {
+  const sc = calcScore({
+    gmn: getRadio('f-gmn'), ig: getRadio('f-ig'),
+    iv: getRadio('f-iv'), trafego: getRadio('f-trafego'),
+    wab: getRadio('f-wab'), site: getRadio('f-site')
+  });
+  const lv = scoreLabel(sc);
+  document.getElementById('score-live').textContent = sc;
+  document.getElementById('nivel-live').textContent = lv.txt;
+  document.getElementById('nivel-live').style.color = lv.color;
+  const bar = document.getElementById('score-bar');
+  bar.style.width = (sc / 12 * 100) + '%';
+  bar.style.background = scoreBarColor(sc);
+}
+
+function resetForm() {
+  ['f-nome','f-resp','f-wpp','f-insta','f-end','f-obs'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  ['f-gmn','f-ig','f-iv','f-trafego','f-wab','f-site','f-int-guia','f-potencial'].forEach(id => {
+    document.querySelectorAll(`#${id} .radio-opt`).forEach(o => { o.classList.remove('selected'); delete o.dataset.value; });
+  });
+  const cat = document.getElementById('f-cat'); if(cat) cat.value = '';
+  const st = document.getElementById('f-status'); if(st) st.value = '🔵 Novo lead';
+  updateScoreLive();
+  editingId = null;
+}
+
+function salvarNegocio() {
+  const nome = document.getElementById('f-nome').value.trim();
+  const wpp  = document.getElementById('f-wpp').value.trim();
+  const cat  = document.getElementById('f-cat').value;
+  if (!nome) { showToast('⚠️ Nome do negócio obrigatório'); return; }
+  if (!wpp)  { showToast('⚠️ WhatsApp obrigatório'); return; }
+  if (!cat)  { showToast('⚠️ Selecione uma categoria'); return; }
+
+  const n = {
+    id: editingId || nextId(),
+    nome, resp: document.getElementById('f-resp').value.trim(),
+    wpp, insta: document.getElementById('f-insta').value.trim(),
+    end: document.getElementById('f-end').value.trim(), cat,
+    gmn: getRadio('f-gmn'), ig: getRadio('f-ig'), iv: getRadio('f-iv'),
+    trafego: getRadio('f-trafego'), wab: getRadio('f-wab'), site: getRadio('f-site'),
+    intGuia: getRadio('f-int-guia'), potencial: getRadio('f-potencial'),
+    status: document.getElementById('f-status').value,
+    obs: document.getElementById('f-obs').value.trim(),
+    data: new Date().toLocaleDateString('pt-BR'),
+    score: calcScore({ gmn: getRadio('f-gmn'), ig: getRadio('f-ig'), iv: getRadio('f-iv'), trafego: getRadio('f-trafego'), wab: getRadio('f-wab'), site: getRadio('f-site') }),
+  };
+  n.oport = oportunidade(n);
+
+  if (editingId) {
+    const idx = data.findIndex(d => d.id === editingId);
+    if (idx >= 0) data[idx] = n;
+  } else {
+    data.unshift(n);
+  }
+  save();
+  resetForm();
+  showView('negocios');
+  syncToSheets(n); // envia para Google Sheets em background
+}
+
+// ── DETALHE ───────────────────────────────────────────────────
+function openDetail(id) {
+  const n = data.find(d => d.id === id);
+  if (!n) return;
+  const sc = calcScore(n);
+  const lv = scoreLabel(sc);
+  const msgWpp = encodeURIComponent(`Oi ${n.resp || n.nome}! Sou do NoGuiaTem, guia local do Cabula. Passei no ${n.nome} e quero te apresentar o projeto. Tem um minutinho?`);
+  const wppNum = (n.wpp || '').replace(/\D/g, '');
+
+  document.getElementById('modal-content').innerHTML = `
+    <div class="modal-title">${n.nome}</div>
+    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+      <span class="badge ${statusColor(n.status).cls}">${n.status || '🔵 Novo lead'}</span>
+      <span class="badge badge-gray">${n.cat || '—'}</span>
+      <span class="badge" style="background:${scoreBarColor(sc)}22;color:${scoreBarColor(sc)}">${lv.txt}</span>
+    </div>
+    <div style="background:var(--g-light);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px;display:flex;gap:12px;align-items:center">
+      <div style="font-family:'Figtree',sans-serif;font-size:40px;font-weight:900;color:var(--g-main);line-height:1">${sc}</div>
+      <div>
+        <div style="font-size:12px;color:var(--g-dark);font-weight:500">Score de maturidade digital</div>
+        <div style="font-size:13px;color:var(--gray);margin-top:2px">Oportunidade: <strong>${n.oport}</strong></div>
+        <div class="score-wrap" style="width:180px;margin-top:6px"><div class="score-bar-bg"><div class="score-bar-fill" style="width:${sc/12*100}%;background:${scoreBarColor(sc)}"></div></div></div>
+      </div>
+    </div>
+    <div class="detail-row"><span class="detail-key">ID</span><span class="detail-val">${n.id}</span></div>
+    <div class="detail-row"><span class="detail-key">Responsável</span><span class="detail-val">${n.resp || '—'}</span></div>
+    <div class="detail-row"><span class="detail-key">WhatsApp</span><span class="detail-val"><a href="https://wa.me/55${wppNum}?text=${msgWpp}" class="wa-link" target="_blank">📱 ${n.wpp}</a></span></div>
+    <div class="detail-row"><span class="detail-key">Instagram</span><span class="detail-val">${n.insta || '—'}</span></div>
+    <div class="detail-row"><span class="detail-key">Endereço</span><span class="detail-val">${n.end || '—'}</span></div>
+    <div class="detail-row"><span class="detail-key">GMN</span><span class="detail-val">${n.gmn || '—'}</span></div>
+    <div class="detail-row"><span class="detail-key">Instagram</span><span class="detail-val">${n.ig || '—'}</span></div>
+    <div class="detail-row"><span class="detail-key">Identidade visual</span><span class="detail-val">${n.iv || '—'}</span></div>
+    <div class="detail-row"><span class="detail-key">WA Business</span><span class="detail-val">${n.wab || '—'}</span></div>
+    <div class="detail-row"><span class="detail-key">Tráfego pago</span><span class="detail-val">${n.trafego || '—'}</span></div>
+    <div class="detail-row"><span class="detail-key">Potencial</span><span class="detail-val">${n.potencial || '—'}</span></div>
+    <div class="detail-row"><span class="detail-key">Interesse guia</span><span class="detail-val">${n.intGuia || '—'}</span></div>
+    <div class="detail-row"><span class="detail-key">Cadastrado em</span><span class="detail-val">${n.data || '—'}</span></div>
+    ${n.obs ? `<div style="background:#f8f8f6;border-radius:var(--radius-sm);padding:10px;margin-top:8px;font-size:13px;color:var(--ink);line-height:1.5"><strong>Obs:</strong> ${n.obs}</div>` : ''}
+    <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap">
+      <a href="https://wa.me/55${wppNum}?text=${msgWpp}" target="_blank" class="btn btn-primary" style="flex:1;text-align:center;text-decoration:none">💬 WhatsApp</a>
+      <button class="btn btn-secondary" style="flex:1" onclick="editNegocio('${n.id}')">✏️ Editar</button>
+      <button class="btn btn-danger" onclick="deleteNegocio('${n.id}')">🗑</button>
+    </div>
+  `;
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal') || !e) {
+    document.getElementById('modal').classList.remove('open');
+  }
+}
+
+function editNegocio(id) {
+  const n = data.find(d => d.id === id);
+  if (!n) return;
+  editingId = id;
+  document.getElementById('modal').classList.remove('open');
+  showView('cadastrar');
+  setTimeout(() => {
+    document.getElementById('f-nome').value = n.nome || '';
+    document.getElementById('f-resp').value = n.resp || '';
+    document.getElementById('f-wpp').value  = n.wpp  || '';
+    document.getElementById('f-insta').value= n.insta|| '';
+    document.getElementById('f-end').value  = n.end  || '';
+    document.getElementById('f-obs').value  = n.obs  || '';
+    document.getElementById('f-cat').value  = n.cat  || '';
+    document.getElementById('f-status').value = n.status || '🔵 Novo lead';
+    const setR = (gid, val) => {
+      document.querySelectorAll(`#${gid} .radio-opt`).forEach(o => {
+        if (o.textContent.includes(val) || o.dataset.value === val) {
+          o.classList.add('selected'); o.dataset.value = val;
+        }
+      });
+    };
+    setR('f-gmn', n.gmn); setR('f-ig', n.ig); setR('f-iv', n.iv);
+    setR('f-trafego', n.trafego); setR('f-wab', n.wab); setR('f-site', n.site);
+    setR('f-int-guia', n.intGuia); setR('f-potencial', n.potencial);
+    updateScoreLive();
+  }, 50);
+}
+
+function deleteNegocio(id) {
+  if (!confirm('Remover este negócio do CRM?')) return;
+  data = data.filter(d => d.id !== id);
+  save(); closeModal({}); renderNegocios();
+  showToast('🗑 Removido');
+}
+
+// ── PIPELINE ─────────────────────────────────────────────────
+function renderPipeline() {
+  const stages = [
+    { key: '🔵 Novo lead',       color: '#1565C0', bg: '#E3F2FD' },
+    { key: '🟡 Em conversa',     color: '#BA7517', bg: '#FFF9C4' },
+    { key: '🟠 Proposta enviada',color: '#E65100', bg: '#FFF3E0' },
+    { key: '🟢 Cadastrado free', color: '#2E7D32', bg: '#E8F5E9' },
+    { key: '⭐ Cliente ativo',   color: '#1B5E20', bg: '#EAF3DE' },
+  ];
+  const board = document.getElementById('pipeline-board');
+  board.innerHTML = stages.map(st => {
+    const items = data.filter(n => n.status === st.key);
+    return `<div class="pipe-col">
+      <div class="pipe-head" style="background:${st.bg};color:${st.color}">${st.key}</div>
+      <div class="pipe-count" style="color:${st.color};background:${st.bg}">${items.length}</div>
+      <div class="pipe-body">
+        ${items.slice(0,5).map(n => `<div class="pipe-item" style="border-color:${st.color}" onclick="openDetail('${n.id}')">${n.nome}</div>`).join('')}
+        ${items.length > 5 ? `<div style="font-size:11px;color:var(--gray);padding:4px">+${items.length-5} mais</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Follow-ups (leads quentes sem conversão)
+  const fl = document.getElementById('followup-list');
+  const quentes = data.filter(n => n.potencial === 'Alto' && n.status !== '⭐ Cliente ativo');
+  if (!quentes.length) { fl.innerHTML = '<div style="padding:12px 0;font-size:13px;color:var(--gray)">Nenhum follow-up pendente</div>'; return; }
+  fl.innerHTML = quentes.map(n => `
+    <div class="card" onclick="openDetail('${n.id}')">
+      <div class="card-header">
+        <div><div class="card-title">${n.nome}</div><div class="card-sub">${n.cat} · Score ${calcScore(n)}</div></div>
+        <span class="badge badge-red">🔥 Alta prioridade</span>
+      </div>
+      <div style="font-size:12px;color:var(--gray);margin-top:6px">→ ${n.oport || 'Fazer proposta'}</div>
+    </div>`).join('');
+}
+
+// ── DASHBOARD ────────────────────────────────────────────────
+function renderDashboard() {
+  const total    = data.length;
+  const ativos   = data.filter(n => n.status === '⭐ Cliente ativo').length;
+  const free     = data.filter(n => n.status === '🟢 Cadastrado free').length;
+  const mrr      = data.filter(n => n.status === '⭐ Cliente ativo').reduce((s, n) => {
+    if (n.plano === 'Premium R$197') return s + 197;
+    if (n.plano === 'Destaque R$79') return s + 79;
+    return s + 79; // padrão
+  }, 0);
+  const scoreAvg = total ? Math.round(data.reduce((s, n) => s + calcScore(n), 0) / total * 10) / 10 : 0;
+  const semDigital = data.filter(n => calcScore(n) <= 2).length;
+  const quentes  = data.filter(n => n.potencial === 'Alto').length;
+
+  document.getElementById('dash-grid').innerHTML = `
+    <div class="dash-card dash-big" style="background:var(--g-dark)">
+      <div class="dash-num mrr-num" style="color:var(--amber)">R$ ${mrr.toLocaleString('pt-BR')}</div>
+      <div class="dash-lbl" style="color:rgba(255,255,255,.6)">MRR — Receita mensal recorrente</div>
+    </div>
+    <div class="dash-card"><div class="dash-num">${total}</div><div class="dash-lbl">Negócios mapeados</div></div>
+    <div class="dash-card"><div class="dash-num" style="color:var(--g-main)">${ativos}</div><div class="dash-lbl">Clientes pagantes</div></div>
+    <div class="dash-card"><div class="dash-num">${free}</div><div class="dash-lbl">Parceiros free</div></div>
+    <div class="dash-card"><div class="dash-num" style="color:#BA7517">${quentes}</div><div class="dash-lbl">Leads quentes 🔥</div></div>
+    <div class="dash-card"><div class="dash-num">${scoreAvg}</div><div class="dash-lbl">Score médio digital</div></div>
+    <div class="dash-card"><div class="dash-num" style="color:var(--red)">${semDigital}</div><div class="dash-lbl">Sem presença digital</div></div>
+    <div class="dash-card" style="background:var(--g-light)"><div class="dash-num" style="color:var(--g-dark)">${total ? Math.round(ativos/total*100) : 0}%</div><div class="dash-lbl" style="color:var(--g-dark)">Taxa de conversão</div></div>
+  `;
+
+  // Por categoria
+  const cats = {};
+  data.forEach(n => { const c = n.cat?.split(' ')[0] || 'Outro'; cats[c] = (cats[c]||0) + 1; });
+  const sorted = Object.entries(cats).sort((a,b) => b[1]-a[1]).slice(0,8);
+  const maxV = sorted[0]?.[1] || 1;
+  document.getElementById('cat-breakdown').innerHTML = sorted.map(([c, v]) => `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <div style="width:100px;font-size:13px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c}</div>
+      <div style="flex:1;height:8px;background:#eee;border-radius:4px;overflow:hidden">
+        <div style="height:100%;width:${v/maxV*100}%;background:var(--g-main);border-radius:4px"></div>
+      </div>
+      <div style="font-size:12px;font-weight:500;color:var(--g-dark);width:20px;text-align:right">${v}</div>
+    </div>`).join('');
+}
+
+// ── STATS DO HEADER ───────────────────────────────────────────
+function updateStats() {
+  document.getElementById('stat-total').textContent = data.length;
+  document.getElementById('stat-clientes').textContent = data.filter(n => n.status === '⭐ Cliente ativo').length;
+  const mrr = data.filter(n => n.status === '⭐ Cliente ativo').reduce((s,n)=>s+79,0);
+  document.getElementById('stat-mrr').textContent = mrr > 0 ? 'R$'+mrr : 'R$0';
+  const avg = data.length ? Math.round(data.reduce((s,n)=>s+calcScore(n),0)/data.length*10)/10 : 0;
+  document.getElementById('stat-score').textContent = data.length ? avg : '—';
+}
+
+// ── EXPORT CSV ────────────────────────────────────────────────
+function exportCSV() {
+  if (!data.length) { showToast('Nenhum dado para exportar'); return; }
+  const headers = ['ID','Nome','Responsável','WhatsApp','Instagram','Endereço','Categoria','GMN','Instagram','Identidade Visual','Tráfego','WA Business','Site','Score','Nível','Status','Potencial','Interesse Guia','Oportunidade','Data','Obs'];
+  const rows = data.map(n => {
+    const sc = calcScore(n);
+    return [n.id,n.nome,n.resp,n.wpp,n.insta,n.end,n.cat,n.gmn,n.ig,n.iv,n.trafego,n.wab,n.site,sc,scoreLabel(sc).txt,n.status,n.potencial,n.intGuia,n.oport,n.data,n.obs].map(v => `"${(v||'').toString().replace(/"/g,'""')}"`).join(',');
+  });
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob(['\ufeff'+csv], { type: 'text/csv;charset=utf-8;' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = 'NoGuiaTem_CRM.csv';
+  a.click(); URL.revokeObjectURL(url);
+  showToast('📥 CSV exportado!');
+}
+
+// ── TOAST ─────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+load();
+updateStats();
+renderNegocios();
+updateScoreLive();
+
+// Escuta inputs do formulário para atualizar score ao vivo
+document.querySelectorAll('.radio-opt').forEach(o => {});
+</script>
+
+
+</body></html>
